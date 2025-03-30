@@ -10,8 +10,6 @@ AlignAfterOpenBracket:	Align
 AlignConsecutiveAssignments:	true
 # 连续声明时，对齐所有声明的变量名
 AlignConsecutiveDeclarations:	true
-# 宏对齐
-AlignConsecutiveMacros: true
 # 左对齐逃脱换行(使用反斜杠换行)的反斜杠
 AlignEscapedNewlinesLeft:	true
 # 水平对齐二元和三元表达式的操作数
@@ -62,15 +60,11 @@ BraceWrapping:
   # union定义后面
   AfterUnion:	false
   # catch之前
-  BeforeCatch:	false
+  BeforeCatch:	true
   # else之前
-  BeforeElse:	false
+  BeforeElse:	true
   # 缩进大括号
   IndentBraces:	false
-  # extern 
-  AfterExternBlock: false
-  # case后换行
-  AfterCaseLabel: false
 # 在二元运算符前换行: None(在操作符后换行), NonAssignment(在非赋值的操作符前换行), All(在操作符前换行)
 BreakBeforeBinaryOperators:	NonAssignment
 # 在大括号前换行: Attach(始终将大括号附加到周围的上下文), Linux(除函数、命名空间和类定义，与Attach类似), 
@@ -83,7 +77,7 @@ BreakBeforeTernaryOperators:	true
 # 在构造函数的初始化列表的逗号前换行
 BreakConstructorInitializersBeforeComma:	false
 # 每行字符的限制，0表示没有限制
-ColumnLimit:  0 #126
+ColumnLimit:	200
 # 描述具有特殊意义的注释的正则表达式，它不应该被分割为多行或以其它方式改变
 CommentPragmas:	'^ IWYU pragma:'
 # 构造函数的初始化列表要么都在同一行，要么都各自一行
@@ -112,7 +106,7 @@ IncludeCategories:
   - Regex:	'.*'
     Priority:	1
 # 缩进case标签
-IndentCaseLabels:	true
+IndentCaseLabels:	false
 # 缩进宽度
 IndentWidth:	4
 # 函数返回类型换行时，缩进函数声明或函数定义的函数名
@@ -124,7 +118,7 @@ MacroBlockBegin:	''
 # 结束一个块的宏的正则表达式
 MacroBlockEnd:	''
 # 连续空行的最大数量
-MaxEmptyLinesToKeep:	10
+MaxEmptyLinesToKeep:	1
 # 命名空间的缩进: None, Inner(缩进嵌套的命名空间中的内容), All
 NamespaceIndentation:	Inner
 # 使用ObjC块时缩进宽度
@@ -136,7 +130,7 @@ ObjCSpaceBeforeProtocolList:	true
 # 在call(后对函数调用换行的penalty
 PenaltyBreakBeforeFirstCallParameter:	19
 # 在一个注释中引入换行的penalty
-PenaltyBreakComment:	106
+PenaltyBreakComment:	300
 # 第一次在<<前换行的penalty
 PenaltyBreakFirstLessLess:	120
 # 在一个字符串字面量中引入换行的penalty
@@ -146,31 +140,31 @@ PenaltyExcessCharacter:	1000000
 # 将函数的返回类型放到它自己的行的penalty
 PenaltyReturnTypeOnItsOwnLine:	60
 # 指针和引用的对齐: Left, Right, Middle
-PointerAlignment:	Right
+PointerAlignment:	Left
 # 允许重新排版注释
 ReflowComments:	true
 # 允许排序#include
-SortIncludes:	false
+SortIncludes:	true
 # 在C风格类型转换后添加空格
 SpaceAfterCStyleCast:	false
 # 在赋值运算符之前添加空格
 SpaceBeforeAssignmentOperators:	true
 # 开圆括号之前添加一个空格: Never, ControlStatements, Always
-SpaceBeforeParens:	ControlStatements #ControlStatements
+SpaceBeforeParens:	ControlStatements
 # 在空的圆括号中添加空格
-SpaceInEmptyParentheses:	true
+SpaceInEmptyParentheses:	false
 # 在尾随的评论前添加的空格数(只适用于//)
-SpacesBeforeTrailingComments:	4
+SpacesBeforeTrailingComments:	2
 # 在尖括号的<后和>前添加空格
 SpacesInAngles:	true
 # 在容器(ObjC和JavaScript的数组和字典等)字面量中添加空格
 SpacesInContainerLiterals:	true
 # 在C风格类型转换的括号中添加空格
-SpacesInCStyleCastParentheses:	false
+SpacesInCStyleCastParentheses:	true
 # 在圆括号的(后和)前添加空格
-SpacesInParentheses:	false
+SpacesInParentheses:	true
 # 在方括号的[后和]前添加空格，lamda表达式和未指明大小的数组的声明不受影响
-SpacesInSquareBrackets:	false
+SpacesInSquareBrackets:	true
 # 标准: Cpp03, Cpp11, Auto
 Standard:	Cpp11
 # tab宽度
