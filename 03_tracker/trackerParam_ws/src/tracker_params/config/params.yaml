@@ -1,0 +1,6 @@
+ekf_xyz: 0.50
+ekf_yaw: 0.355
+ekf_r: 0.802
+vx: 2
+vy: 1
+vz: 3
