@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/fishatlsc/RM/03_detect_color_bv_cv/build",
+  "command": "/usr/bin/c++  -isystem /usr/include/opencv4 -g -o CMakeFiles/color_detection.dir/detect_color.cpp.o -c /home/fishatlsc/RM/03_detect_color_bv_cv/src/detect_color.cpp",
+  "file": "/home/fishatlsc/RM/03_detect_color_bv_cv/src/detect_color.cpp"
+}
+]

@@ -1,0 +1,3 @@
+/home/fishatlsc/RM/03_detect_color_bv_cv/build/CMakeFiles/color_detection.dir
+/home/fishatlsc/RM/03_detect_color_bv_cv/build/CMakeFiles/edit_cache.dir
+/home/fishatlsc/RM/03_detect_color_bv_cv/build/CMakeFiles/rebuild_cache.dir
