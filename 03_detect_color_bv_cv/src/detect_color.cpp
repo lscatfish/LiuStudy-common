@@ -2,8 +2,43 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <stdio.h>
+#include <iostream>
 
-void detectBlueYellow(const char *imagePath, const std::string &winname) {
+enum ChooseDetectColor {
+    dcolor_ALL = 0,
+    dcolor_YELLOW,
+    dcolor_BLUE,
+};
+
+ChooseDetectColor chooseDetectColor( ) {
+    int inputc = -1;
+    while (!(inputc >= 0 && inputc <= 2)) {
+        std::cout << std::endl
+                  << "请选择要识别的颜色：0.黄色&蓝色 1.黄色 2.蓝色" << std::endl;
+        std::cin >> inputc;
+        switch (inputc) {
+            case 0:
+                return dcolor_ALL;
+                break;
+            case 1:
+                return dcolor_YELLOW;
+                break;
+            case 2:
+                return dcolor_BLUE;
+                break;
+            default:
+                std::cout << std::endl
+                          << "你的输入存在错误，请重新输入..." << std::endl;
+                break;
+        }
+    }
+    return 0;
+}
+
+void detectBlueYellow(
+    const char        *imagePath,
+    const std::string &winname,
+    ChooseDetectColor  whichcolor) {
     // 读取图像
     cv::Mat image = cv::imread(imagePath, cv::IMREAD_COLOR);
     if (image.empty( )) {
@@ -28,8 +63,22 @@ void detectBlueYellow(const char *imagePath, const std::string &winname) {
     cv::Mat    mask_yellow;
     cv::inRange(hsv, lower_yellow, upper_yellow, mask_yellow);
 
-    // 合并蓝色和黄色的掩码
-    cv::Mat mask = mask_blue | mask_yellow;
+    // 选择检测的颜色
+    cv::Mat mask;
+    switch (whichcolor) {
+        case dcolor_ALL:
+            mask = mask_blue | mask_yellow;
+            break;
+        case dcolor_BLUE:
+            mask = mask_blue;
+            break;
+        case dcolor_YELLOW:
+            mask = mask_yellow;
+            break;
+        default:
+            return;
+            break;
+    }
 
     // 找到轮廓
     std::vector< std::vector< cv::Point > > contours;
@@ -50,7 +99,8 @@ void detectBlueYellow(const char *imagePath, const std::string &winname) {
 }
 
 int main( ) {
-    detectBlueYellow("../cube_in.png", "in");
-    detectBlueYellow("../cube_out.png", "out");
+    ChooseDetectColor wc = chooseDetectColor( );
+    detectBlueYellow("../cube_in.png", "in", wc);
+    detectBlueYellow("../cube_out.png", "out", wc);
     return 0;
 }
