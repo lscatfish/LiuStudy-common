@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/fishatlsc/RM/04_CameraCalibration/build",
+  "command": "/usr/bin/c++  -isystem /usr/include/opencv4 -g -std=gnu++11 -o CMakeFiles/calibration.dir/src/Calibration.cpp.o -c /home/fishatlsc/RM/04_CameraCalibration/src/Calibration.cpp",
+  "file": "/home/fishatlsc/RM/04_CameraCalibration/src/Calibration.cpp"
+}
+]
