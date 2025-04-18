@@ -1,3 +1,0 @@
-/home/fishatlsc/RM/04_CameraCalibration/build/CMakeFiles/calibration.dir
-/home/fishatlsc/RM/04_CameraCalibration/build/CMakeFiles/edit_cache.dir
-/home/fishatlsc/RM/04_CameraCalibration/build/CMakeFiles/rebuild_cache.dir
