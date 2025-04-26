@@ -194,14 +194,13 @@ void recognition::calculateDistance( ) {
     // 构建2D点，获取灯条端点坐标
     std::vector< cv::Point2f > img_points;
     // 左灯条上端点的2D点坐标
-    img_points.push_back(cv::Point2f((best_strips_[0].x + best_strips_[0].width) / 2, best_strips_[0].y));
+    img_points.push_back(cv::Point2f(best_strips_[0].x + best_strips_[0].width / 2, best_strips_[0].y));
     // 左灯条下端点的2D点坐标
-    img_points.push_back(cv::Point2f((best_strips_[0].x + best_strips_[0].width) / 2, best_strips_[0].y + best_strips_[0].height));
+    img_points.push_back(cv::Point2f(best_strips_[0].x + best_strips_[0].width / 2, best_strips_[0].y + best_strips_[0].height));
     // 右灯条上端点的2D点坐标
-    img_points.push_back(cv::Point2f((best_strips_[1].x + best_strips_[1].width) / 2, best_strips_[1].y));
+    img_points.push_back(cv::Point2f(best_strips_[1].x + best_strips_[1].width / 2, best_strips_[1].y));
     // 右灯条下端点的2D点坐标
-    img_points.push_back(cv::Point2f((best_strips_[1].x + best_strips_[1].width) / 2, best_strips_[1].y + best_strips_[1].height));
-
+    img_points.push_back(cv::Point2f(best_strips_[1].x + best_strips_[1].width / 2, best_strips_[1].y + best_strips_[1].height));
 
     // 调用PnP算法求解相机位姿，返回求解是否成功的标志
     bool success = solvePnP(obj_points, img_points, camera_matrix, dist_coeffs, rvec_, tvec_);
