@@ -7,11 +7,12 @@
 class recognition {
 
 private:
-    cv::Mat     inputImg_;    //原图
-    std::string color_;       //检测的颜色
+    cv::Mat     inputImg_;    // 原图
+    std::string color_;       // 检测的颜色
 
-    cv::Mat inputImg_hsv_;    // hsv空间
-    cv::Mat color_mask_;      //颜色掩码
+    cv::Mat channels_[3];             // 三个通道空间0：蓝  2：红
+    cv::Mat inputImg_inRange_RGB_;    //
+    cv::Mat binary_;
 
     std::vector< std::vector< cv::Point > > contours_;     // 存储所有轮廓
     std::vector< cv::Vec4i >                hierarchy_;    // 存储轮廓的层次结构
@@ -21,7 +22,7 @@ private:
 
     double distance_;    //距离相机的距离
 
-    const double mergeThreshold_ = 8;    // 融合阈值，可调整
+    const double mergeThreshold_ = 5;    // 融合阈值，可调整
 
     // 旋转向量
     cv::Mat rvec_;
@@ -33,8 +34,8 @@ private:
 
     // #################################################################
 
-    void filterAndCvt( );
-    void setColorMask( );
+    void imgInRange( );
+    void cvtBinary( );
     void mergeCloseContours( );
     void filterLightStrips( );
     void selectBestLightStrips( );
@@ -44,8 +45,7 @@ private:
 
     // #################################################################
 
-    static cv::Mat
-    createColorMask(
+    static cv::Mat createColorMask(
         const cv::Mat    &hsv,
         const cv::Scalar &lower,
         const cv::Scalar &upper);

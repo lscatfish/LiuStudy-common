@@ -5,18 +5,33 @@
 #include "recognition.h"
 #include <cmath>
 
+// 先将图片转化为hsv，inRang控制
+// 转化为RGB，二值化
+
+
 //######################################################################################
 
 recognition::recognition(const cv::Mat &input, const std::string &color, cv::Mat &output, double &distance) {
     inputImg_ = input.clone( );
+
+
+
     color_    = color;
-    filterAndCvt( );
-    setColorMask( );
+    imgInRange( );
+    cvtBinary( );
 
     // 使用RETR_TREE模式检索所有轮廓，包含内部轮廓
-    cv::findContours(color_mask_, contours_, hierarchy_, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+    cv::findContours(binary_, contours_, hierarchy_, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
     mergeCloseContours( );
     filterLightStrips( );
+
+    cv::Mat test = input.clone( );
+    for (size_t i = 0; i < light_strips_.size( ); i++) {
+        cv::rectangle(test, light_strips_[i], cv::Scalar(0, 0, 255), 2);
+    }
+    cv::imshow("test", test);
+
+
     selectBestLightStrips( );
     calculateDistance( );
     printDistance( );
@@ -34,35 +49,49 @@ recognition::~recognition( ) {
 //######################################################################################
 
 
+//
+void recognition::imgInRange( ) {
+    cv::Mat hsv, color_mask;
+    cv::cvtColor(inputImg_, hsv, cv::COLOR_BGR2HSV);
 
-//滤波器 并且转化为hsv
-void recognition::filterAndCvt( ) {
-    // 存储高斯模糊后的图像
-    cv::Mat blurred;
-    // 对图像进行高斯模糊降噪
-    cv::GaussianBlur(inputImg_, blurred, cv::Size(5, 5), 0);
+    if (color_ == "red") {
+        cv::Scalar lower1(0, 0, 200);
+        cv::Scalar upper1(100, 255, 255);
+        cv::Scalar lower2(170, 100, 100);
+        cv::Scalar upper2(180, 255, 255);
 
-    cv::Mat medianFiltered;
-    // 对高斯模糊后的图像进行中值滤波降噪
-    cv::medianBlur(blurred, medianFiltered, 5);
+        cv::Mat red_mask1 = createColorMask(hsv, lower1, upper1);
+        cv::Mat red_mask2 = createColorMask(hsv, lower2, upper2);
+        color_mask        = red_mask1 | red_mask2;
 
-    // 将中值滤波后的图像从BGR颜色空间转换为HSV颜色空间
-    cv::cvtColor(medianFiltered, inputImg_hsv_, cv::COLOR_BGR2HSV);
+    } else if (color_ == "blue") {
+        cv::Scalar lower(0, 0, 150);
+        cv::Scalar upper(88, 255, 255);
+
+        color_mask = createColorMask(hsv, lower, upper);
+    }
+
+    // cv::cvtColor(color_mask, inputImg_inRange_RGB_, cv::COLOR_HSV2RGB);
+    cv::bitwise_and(inputImg_, inputImg_, inputImg_inRange_RGB_, color_mask);
+    cv::imshow("RGB_", inputImg_inRange_RGB_);
 }
 
-//生成颜色掩码
-void recognition::setColorMask( ) {
+//颜色掩码   二值化
+void recognition::cvtBinary( ) {
+    //通道分割
+    cv::split(inputImg_inRange_RGB_, channels_);
+    cv::Mat chl;
+
     if (color_ == "red") {
-        // 创建低范围红色掩码
-        cv::Mat red_mask1 = createColorMask(inputImg_hsv_, cv::Scalar(0, 100, 100), cv::Scalar(10, 255, 255));
-        // 创建高范围红色掩码
-        cv::Mat red_mask2 = createColorMask(inputImg_hsv_, cv::Scalar(170, 100, 100), cv::Scalar(180, 255, 255));
-        // 合并两个红色掩码
-        color_mask_ = red_mask1 | red_mask2;
+        cv::threshold(channels_[2], chl, 230, 255, 0);
     } else if (color_ == "blue") {
-        // 创建蓝色掩码
-        color_mask_ = createColorMask(inputImg_hsv_, cv::Scalar(82, 24, 184), cv::Scalar(100, 255, 255));
+        cv::threshold(channels_[0], chl, 230, 255, 0);
     }
+    cv::imshow("chl", chl);
+
+    //高斯
+    cv::GaussianBlur(chl, binary_, cv::Size(5, 5), 0);
+    cv::imshow("binary", binary_);
 }
 
 // 融合接近的轮廓的函数，输入为所有轮廓和融合阈值，输出为融合后的轮廓
@@ -190,7 +219,6 @@ void recognition::calculateDistance( ) {
     if (light_strips_.size( ) < 2) {
         return;
     }
-    
     // 构建2D点，获取灯条端点坐标
     std::vector< cv::Point2f > img_points;
     // 左灯条上端点的2D点坐标
@@ -232,8 +260,9 @@ void recognition::setTangle( ) {
     }
 }
 
-// 333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
-// 333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
+
+// ######################################################################################################
+// ######################################################################################################
 
 // 创建颜色掩码的函数，输入为HSV图像、颜色下限和颜色上限，输出为颜色掩码
 cv::Mat recognition::createColorMask(const cv::Mat &hsv, const cv::Scalar &lower, const cv::Scalar &upper) {
